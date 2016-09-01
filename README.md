@@ -8,6 +8,7 @@
 self.tableView.ad_footer = [ADRefreshFooter ad_footerWithRefreshBlock:^{
         //Refresh 
     }];
+    
 //设置没有更多数据    
 self.tableView.ad_footer.noMoreData = YES;
 
