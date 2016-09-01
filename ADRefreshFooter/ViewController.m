@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "ADRefreshFooter.h"
+#import "MJRefresh.h"
 
 @interface ViewController ()
 {
@@ -23,23 +24,40 @@
     
     offset = 1;
     
-    self.tableView.ad_footer = [ADRefreshFooter ad_footerWithRefreshBlock:^{
-        NSLog(@"开始刷新");
-        
+    self.tableView.mj_footer = [MJRefreshAutoGifFooter footerWithRefreshingBlock:^{
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1*NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             NSLog(@"结束刷新");
             offset ++;
             
-            if (offset == 3) {
-                self.tableView.ad_footer.noMoreData = YES;
+            if (offset >= 3) {
+                [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            } else {
+                [self.tableView reloadData];
+                
+                [self.tableView.mj_footer endRefreshing];
             }
             
-            [self.tableView reloadData];
             
-            [self.tableView.ad_footer endRefresh];
         });
-    
     }];
+    
+//    self.tableView.ad_footer = [ADRefreshFooter ad_footerWithRefreshBlock:^{
+//        NSLog(@"开始刷新");
+//        
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1*NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+//            NSLog(@"结束刷新");
+//            offset ++;
+//            
+//            if (offset == 3) {
+//                self.tableView.ad_footer.noMoreData = YES;
+//            }
+//            
+//            [self.tableView reloadData];
+//            
+//            [self.tableView.ad_footer endRefresh];
+//        });
+//    
+//    }];
 }
 
 - (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView

@@ -136,7 +136,7 @@
 
 - (void)scrollViewContentSizeDidChange:(NSDictionary *)change {
     
-    if (self.parentScroll.contentSize.height < self.parentScroll.size.height) {
+    if (self.parentScroll.contentSize.height < self.parentScroll.frame.size.height) {
         self.hidden = YES;
     } else {
         self.hidden = NO;
