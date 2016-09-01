@@ -71,6 +71,10 @@
     _noMoreData = noMoreData;
     
     [self configNoMoreData];
+    
+    if (self.isRefreshing && noMoreData) {
+        [self endRefresh];
+    }
 }
 
 - (void)setStatus:(ADRefreshStatus)status
@@ -131,10 +135,16 @@
 }
 
 - (void)scrollViewContentSizeDidChange:(NSDictionary *)change {
-    // 设置位置
-    CGRect newRect = self.frame;
-    newRect.origin.y = self.parentScroll.contentSize.height;
-    self.frame = newRect;
+    
+    if (self.parentScroll.contentSize.height < self.parentScroll.size.height) {
+        self.hidden = YES;
+    } else {
+        self.hidden = NO;
+        // 设置位置
+        CGRect newRect = self.frame;
+        newRect.origin.y = self.parentScroll.contentSize.height;
+        self.frame = newRect;
+    }
 }
 
 //开始刷新
@@ -147,7 +157,7 @@
     [self.indicator startAnimating];
     
     self.status = ADRefreshStatusRefreshing;
-	//设置scroll contentInset
+    //设置scroll contentInset
     self.lastScrollInsets = self.parentScroll.contentInset;
     
     UIEdgeInsets newInsets = self.parentScroll.contentInset;
@@ -160,18 +170,11 @@
 //结束刷新
 - (void)endRefresh
 {
+    [self configNoMoreData];
+    
     self.status = ADRefreshStatusNormal;
     
     [self.indicator stopAnimating];
-    
-	[UIView animateWithDuration:AnimationDurationTime animations:^{
-        self.alpha = 0;
-    } completion:^(BOOL finished) {
-        self.parentScroll.contentInset = self.lastScrollInsets;
-        self.alpha = 1;
-        
-        [self configNoMoreData];
-    }];
 }
 
 - (void)configNoMoreData
@@ -183,6 +186,12 @@
         self.indicator.hidden = NO;
         self.statusLabel.hidden = YES;
     }
+}
+
+- (void)dealloc
+{
+    [self.superview removeObserver:self forKeyPath:@"contentSize"];
+    [self.superview removeObserver:self forKeyPath:@"contentOffset"];
 }
 
 @end
@@ -199,7 +208,7 @@
     ad_footer.parentScroll = self;
     
     UIEdgeInsets edgs = self.contentInset;
-    edgs.bottom = ADFreshHeight;
+    edgs.bottom += ADFreshHeight;
     self.contentInset = edgs;
     
     //footer

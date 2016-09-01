@@ -42,6 +42,11 @@
     }];
 }
 
+- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView
+{
+    self.tableView.ad_footer.noMoreData = NO;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *ideifer = @"cell";
