@@ -3,7 +3,7 @@
 
 ![gif](http://i4.buimg.com/567571/db6fb292406c1599.gif)
 
-###使用方法:
+### 使用方法:
 ```objc
 self.tableView.ad_footer = [ADRefreshFooter ad_footerWithRefreshBlock:^{
         //Refresh 
@@ -16,4 +16,4 @@ self.tableView.ad_footer.noMoreData = YES;
 [self.tableView.ad_footer endRefresh];
 ```
 
-#####喜欢可点击**Star**,谢谢
+##### 喜欢可点击**Star**,谢谢
